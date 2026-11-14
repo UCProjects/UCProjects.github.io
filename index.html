@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UCProjects</title>
+<meta name="description" content="Community projects for Undercards: UnderScript, the UnderScript App, a leaderboard, a template editor and plugin tools.">
+<meta property="og:title" content="UCProjects">
+<meta property="og:description" content="Community projects for Undercards.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#14161c">
+<style>
+:root {
+  --bg: #14161c;
+  --surface: #1d2029;
+  --text: #e8e9ee;
+  --muted: #a3a7b5;
+  --accent: #7c9cff;
+  --border: #2b2f3b;
+  --warn: #f0b429;
+  --warn-bg: rgba(240, 180, 41, 0.12);
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --text: #1b1d26;
+    --muted: #5b6070;
+    --accent: #3f5fe0;
+    --border: #dde0ea;
+    --warn: #9a6700;
+    --warn-bg: #fff4d6;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+header, main, footer {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+header { padding-top: 64px; text-align: center; }
+h1 { font-size: clamp(2rem, 6vw, 3rem); margin: 0 0 12px; }
+h2 { font-size: 1.25rem; margin: 0 0 8px; }
+p { margin: 0 0 16px; }
+a { color: var(--accent); }
+.lead { color: var(--muted); font-size: 1.15rem; max-width: 640px; margin: 0 auto; }
+main { padding-top: 40px; }
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.project {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.project h2 a { color: var(--text); text-decoration: none; }
+.project h2 a:hover, .project h2 a:focus-visible { color: var(--accent); text-decoration: underline; }
+.project p { color: var(--muted); flex: 1; }
+.project .notice {
+  flex: none;
+  margin: 0 0 16px;
+  padding: 8px 12px;
+  background: var(--warn-bg);
+  border-left: 3px solid var(--warn);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+.project .links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; font-size: 0.9rem; }
+footer { padding-top: 56px; padding-bottom: 48px; color: var(--muted); font-size: 0.9rem; text-align: center; }
+@media (max-width: 720px) {
+  header { padding-top: 40px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>UCProjects</h1>
+  <p class="lead">Community projects for <a href="https://undercards.net/">Undercards</a>.</p>
+</header>
+
+<main>
+  <ul class="projects">
+    <li class="project">
+      <h2><a href="https://underscript.uc.feildmaster.com/">UnderScript</a></h2>
+      <p>A userscript that fixes bugs and adds features to Undercards, with a plugin system for the community.</p>
+      <p class="links"><a href="https://github.com/UCProjects/UnderScript">Source</a></p>
+    </li>
+    <li class="project">
+      <h2><a href="https://app.uc.feildmaster.com/">UnderScript App</a></h2>
+      <p>The Undercards desktop app with UnderScript built in. Sign in once and install plugins in a click.</p>
+      <p class="links"><a href="https://github.com/UCProjects/UnderScript-App">Source</a></p>
+    </li>
+    <li class="project">
+      <h2><a href="https://leaderboard.uc.feildmaster.com/">Leaderboard</a></h2>
+      <p>Leaderboards and player pages for Undercards.</p>
+      <p class="links"><a href="https://github.com/UCProjects/Leaderboard">Source</a></p>
+    </li>
+    <li class="project">
+      <h2><a href="https://undercard.feildmaster.com/">Template Editor</a></h2>
+      <p>Design your own Undercards-style cards and save them as images.</p>
+      <p class="links"><a href="https://github.com/UCProjects/CardEditor">Source</a></p>
+    </li>
+    <li class="project">
+      <h2><a href="https://underscript.uc.feildmaster.com/generator">Plugin Generator</a></h2>
+      <p>Make your own UnderScript plugin without writing code, or start from the plugin template.</p>
+      <p class="links">
+        <a href="https://github.com/UCProjects/Plugin-Template">Plugin template</a>
+        <a href="https://github.com/UCProjects/Plugin-Generator">Source</a>
+      </p>
+    </li>
+    <li class="project">
+      <h2><a href="https://github.com/UCProjects/Chest">Chest</a></h2>
+      <p>A Discord bot for Undercards: look up cards and artifacts, make deck images, browse the deck hub and simulate opening packs.</p>
+      <p class="notice"><strong>Often full.</strong> Discord limits unverified bots to 100 servers, so adding it may fail.</p>
+      <p class="links">
+        <a href="https://discord.com/oauth2/authorize?client_id=797751402767319081">Add to your server</a>
+        <a href="https://github.com/UCProjects/Chest/blob/master/privacy.md">Privacy</a>
+        <a href="https://github.com/UCProjects/Chest/blob/master/tos.md">Terms</a>
+      </p>
+    </li>
+    <li class="project">
+      <h2><a href="https://github.com/UCProjects/Chat">Chat</a></h2>
+      <p>A bot that relays Undercards chat to a Discord server for chat records, with a reporting feature.</p>
+      <p class="links"><a href="https://discord.gg/3GkgMa3cfZ">Join the server</a></p>
+    </li>
+  </ul>
+</main>
+
+<footer>
+  <p>These are community projects, not affiliated with Undercards.</p>
+</footer>
+</body>
+</html>
