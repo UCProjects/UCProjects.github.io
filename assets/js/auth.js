@@ -8,6 +8,7 @@ import {
   signInWithCustomToken,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
 import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js';
 
@@ -28,6 +29,11 @@ const linkedDialog = document.querySelector('#linkedDialog');
 const linkRows = [...linkedDialog.querySelectorAll('.linked-row')];
 const linkError = linkedDialog.querySelector('.link-error');
 const authError = document.querySelector('#authError');
+const nameDialog = document.querySelector('#nameDialog');
+const nameForm = nameDialog.querySelector('#nameForm');
+const nameInput = nameDialog.querySelector('#nameInput');
+const nameError = nameDialog.querySelector('.link-error');
+const nameSave = nameForm.querySelector('[type="submit"]');
 
 const providers = {
   google: () => new GoogleAuthProvider(),
@@ -149,6 +155,7 @@ function showLinked(state) {
 function refreshLinked(user) {
   if (!signedIn(user)) {
     linkedDialog.close();
+    nameDialog.close();
     return Promise.resolve();
   }
   return linkedState(user).then((state) => {
@@ -190,6 +197,41 @@ userMenu.querySelector('.open-linked').addEventListener('click', () => {
 
 linkedDialog.addEventListener('click', (event) => {
   if (event.target === linkedDialog) linkedDialog.close();
+});
+
+userMenu.querySelector('.open-name').addEventListener('click', () => {
+  userMenu.hidePopover();
+  nameError.hidden = true;
+  nameInput.value = auth.currentUser?.displayName || '';
+  nameDialog.showModal();
+});
+
+nameDialog.addEventListener('click', (event) => {
+  if (event.target === nameDialog) nameDialog.close();
+});
+
+nameForm.querySelector('.cancel').addEventListener('click', () => nameDialog.close());
+
+nameForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const user = auth.currentUser;
+  const displayName = nameInput.value.trim();
+  if (!signedIn(user) || !displayName) return;
+  nameError.hidden = true;
+  nameSave.disabled = true;
+  updateProfile(user, { displayName })
+    .then(() => {
+      updateUser(auth.currentUser);
+      nameDialog.close();
+    })
+    .catch((error) => {
+      console.debug('Name error:', error);
+      nameError.textContent = 'Could not save your name.';
+      nameError.hidden = false;
+    })
+    .finally(() => {
+      nameSave.disabled = false;
+    });
 });
 
 linkRows.forEach((row) => {

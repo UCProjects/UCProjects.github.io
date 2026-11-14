@@ -197,6 +197,17 @@ dialog button:hover, dialog button:focus-visible { background: var(--border); }
 dialog [hidden] { display: none; }
 .link-error { padding-top: 8px; font-size: 0.9rem; color: var(--warn); }
 .dialog-actions { margin-top: 16px; text-align: right; }
+.dialog-actions button + button { margin-left: 8px; }
+#nameInput {
+  width: 100%;
+  padding: 6px 8px;
+  background: var(--bg);
+  color: inherit;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font: inherit;
+}
+#nameInput:focus-visible { border-color: var(--accent); outline: none; }
 footer { padding-top: 56px; padding-bottom: 48px; color: var(--muted); font-size: 0.9rem; text-align: center; }
 @media (max-width: 720px) {
   .bar-title span { display: none; }
@@ -244,6 +255,7 @@ footer { padding-top: 56px; padding-bottom: 48px; color: var(--muted); font-size
 </div>
 <p id="authError" class="auth-error" role="alert" hidden></p>
 <div id="userMenu" popover class="menu">
+  <button type="button" class="open-name">Display name</button>
   <button type="button" class="open-linked">Linked accounts</button>
   <button type="button" class="logout">Sign out</button>
 </div>
@@ -276,6 +288,18 @@ footer { padding-top: 56px; padding-bottom: 48px; color: var(--muted); font-size
       <button type="submit">Close</button>
     </form>
   </div>
+</dialog>
+<dialog id="nameDialog" aria-labelledby="nameTitle">
+  <form class="dialog-body" id="nameForm">
+    <h2 id="nameTitle">Display name</h2>
+    <p class="dialog-note">The name these sites greet you with. Only you see it.</p>
+    <input id="nameInput" name="displayName" type="text" maxlength="50" required autocomplete="nickname" aria-labelledby="nameTitle">
+    <div class="link-error" role="alert" hidden></div>
+    <div class="dialog-actions">
+      <button type="button" class="cancel">Cancel</button>
+      <button type="submit">Save</button>
+    </div>
+  </form>
 </dialog>
 <header>
   <h1>UCProjects</h1>
