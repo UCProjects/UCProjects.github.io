@@ -9,6 +9,7 @@
 <meta property="og:description" content="Community projects for Undercards.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#14161c">
+<script type="module" src="./assets/js/auth.js"></script>
 <style>
 :root {
   --bg: #14161c;
@@ -45,7 +46,7 @@ header, main, footer {
   margin: 0 auto;
   padding: 0 16px;
 }
-header { padding-top: 64px; text-align: center; }
+header { padding-top: 24px; text-align: center; }
 h1 { font-size: clamp(2rem, 6vw, 3rem); margin: 0 0 12px; }
 h2 { font-size: 1.25rem; margin: 0 0 8px; }
 p { margin: 0 0 16px; }
@@ -82,13 +83,175 @@ main { padding-top: 40px; }
   font-size: 0.9rem;
 }
 .project .links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; font-size: 0.9rem; }
+.bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  border-bottom: 1px solid transparent;
+  pointer-events: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.bar.show { background: var(--surface); border-bottom-color: var(--border); pointer-events: auto; }
+.bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 8px 16px;
+}
+.bar-title {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 12px;
+  min-width: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
+.bar.show .bar-title { opacity: 1; visibility: visible; transition: opacity 0.2s ease; }
+.bar-title strong { font-size: 1.05rem; white-space: nowrap; }
+.bar-title span { color: var(--muted); font-size: 0.9rem; }
+.auth-trigger {
+  margin-left: auto;
+  padding: 6px 12px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  pointer-events: auto;
+}
+.auth-trigger:hover, .auth-trigger:focus-visible { border-color: var(--accent); }
+@media (prefers-reduced-motion: reduce) {
+  .bar, .bar-title, .bar.show .bar-title { transition: none; }
+}
+body.authed .unauthed, body:not(.authed) .authed { display: none; }
+.auth-error {
+  max-width: 960px;
+  margin: 60px auto 0;
+  padding: 8px 12px;
+  background: var(--warn-bg);
+  border-left: 3px solid var(--warn);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+.auth-error[hidden] { display: none; }
+.menu {
+  position: fixed;
+  inset: auto;
+  top: 52px;
+  right: 16px;
+  margin: 0;
+  min-width: 160px;
+  padding: 6px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.menu button {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+.menu button:hover, .menu button:focus-visible { background: var(--border); }
+dialog {
+  width: min(360px, calc(100vw - 32px));
+  margin: auto;
+  padding: 0;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
+.dialog-body { padding: 20px 24px; }
+dialog h2 { margin-bottom: 6px; }
+.dialog-note { margin-bottom: 14px; font-size: 0.9rem; color: var(--muted); }
+.linked-row { display: flex; align-items: center; gap: 12px; min-height: 38px; }
+.linked-row .provider-name { flex: 1; }
+.linked-row .status { font-size: 0.9rem; color: var(--muted); }
+dialog button {
+  padding: 4px 12px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+dialog button:hover, dialog button:focus-visible { background: var(--border); }
+dialog [hidden] { display: none; }
+.link-error { padding-top: 8px; font-size: 0.9rem; color: var(--warn); }
+.dialog-actions { margin-top: 16px; text-align: right; }
 footer { padding-top: 56px; padding-bottom: 48px; color: var(--muted); font-size: 0.9rem; text-align: center; }
 @media (max-width: 720px) {
-  header { padding-top: 40px; }
+  .bar-title span { display: none; }
+}
+@media (max-width: 479px) {
+  header { padding-top: 64px; }
 }
 </style>
 </head>
 <body>
+<div class="bar" id="bar">
+  <div class="bar-inner">
+    <div class="bar-title">
+      <strong>UCProjects</strong>
+      <span>Community projects for Undercards</span>
+    </div>
+    <button id="user" type="button" popovertarget="userMenu" class="auth-trigger authed username"></button>
+    <button id="login" type="button" popovertarget="loginMenu" class="auth-trigger unauthed">Log in</button>
+  </div>
+</div>
+<p id="authError" class="auth-error" role="alert" hidden></p>
+<div id="userMenu" popover class="menu">
+  <button type="button" class="open-linked">Linked accounts</button>
+  <button type="button" class="logout">Sign out</button>
+</div>
+<div id="loginMenu" popover class="menu">
+  <button type="button" data-provider="google">Google</button>
+  <button type="button" data-provider="github">GitHub</button>
+  <button type="button" data-provider="discord">Discord</button>
+</div>
+<dialog id="linkedDialog" aria-labelledby="linkedTitle">
+  <div class="dialog-body">
+    <h2 id="linkedTitle">Linked accounts</h2>
+    <p class="dialog-note">Link the accounts you sign in with, even if they use different email addresses, and they all open this same account.</p>
+    <div class="linked-row" data-provider="google">
+      <span class="provider-name">Google</span>
+      <span class="status" hidden>Linked</span>
+      <button type="button" class="link" hidden>Link</button>
+    </div>
+    <div class="linked-row" data-provider="github">
+      <span class="provider-name">GitHub</span>
+      <span class="status" hidden>Linked</span>
+      <button type="button" class="link" hidden>Link</button>
+    </div>
+    <div class="linked-row" data-provider="discord">
+      <span class="provider-name">Discord</span>
+      <span class="status" hidden>Linked</span>
+      <button type="button" class="link" hidden>Link</button>
+    </div>
+    <div class="link-error" role="alert" hidden></div>
+    <form method="dialog" class="dialog-actions">
+      <button type="submit">Close</button>
+    </form>
+  </div>
+</dialog>
 <header>
   <h1>UCProjects</h1>
   <p class="lead">Community projects for <a href="https://undercards.net/">Undercards</a>.</p>
